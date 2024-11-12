@@ -1,10 +1,10 @@
 import pandas as pd
 
-# Specify the path to your dataset (update with the correct path)
+# Path to dataset
 dataset_path = r'CA1\\Datasets\Cardiovascular\cardio_train.csv'
 
-# Load the dataset into a pandas DataFrame
+# Load the dataset into a pandas
 df = pd.read_csv(dataset_path, sep=';')
 
-# Display the first few rows of the dataset to confirm it's loaded correctly
+# Test
 print(df.head())
