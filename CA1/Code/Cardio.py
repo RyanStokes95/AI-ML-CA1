@@ -10,7 +10,7 @@ from sklearn.linear_model import LogisticRegression
 # Path to dataset
 dataset_path = r'CA1\\Datasets\Cardiovascular\cardio_train.csv'
 
-# Load the dataset into a pandas
+# Load the dataset into pandas
 df = pd.read_csv(dataset_path, sep=';')
 
 # Changing age in days to age in years
@@ -44,36 +44,8 @@ print(df.dtypes)
 pd.set_option('display.max_columns', None)
 print(df.describe(include='all'))
 
-# Define the custom bins and labels for age ranges
-bins = [20, 30, 40, 50, 60, 70]
-labels = ['21-30', '31-40', '41-50', '51-60', '61-70']
-
-# Create a new column 'age_group' based on the bins
-df['age_group'] = pd.cut(df['age_years'], bins=bins, labels=labels, right=False)
-
-# Plot the histogram
-plt.figure(figsize=(8, 6))
-ax = sns.countplot(x='age_group', data=df, palette='Set2')
-
-# Shows count for first range with count < 10
-for p in ax.patches:
-    count = p.get_height()
-    if count < 10:
-        ax.annotate(f'{count}', (p.get_x() + p.get_width() / 2., count), 
-                    ha='center', va='bottom', fontsize=10, color='black', fontweight='bold')
-
-#Plots Histogram
-plt.title('Age Distribution by Group')
-plt.xlabel('Age Group')
-plt.ylabel('Count')
-plt.xticks(rotation=45)
-plt.grid(True)
-
-# Shows Histogram
-plt.show()
-
 # Scatter plot for Height vs. Weight with smaller dots
-plt.figure(figsize=(20, 12))
+plt.figure(figsize=(10, 8))
 
 # Set the size and colour of the dots
 plt.scatter(df['height'], df['weight'], alpha=0.5, color='blue', s=5)
@@ -87,7 +59,7 @@ plt.ylabel('Weight (kg)', fontsize=12)
 plt.show()
 
 # Scatter plot for Blood Pressure
-plt.figure(figsize=(20, 12))
+plt.figure(figsize=(10, 8))
 
 # Set the size and colour of the dots
 plt.scatter(df['ap_hi'], df['ap_lo'], alpha=0.5, color='red', s=5)
@@ -100,22 +72,9 @@ plt.ylabel('Diastolic blood pressure (mmHg)', fontsize=12)
 # Show plot
 plt.show()
 
-sns.countplot(x='cardio', data=df)
-plt.title('Distribution of Cardio (0 vs 1)')
-plt.show()
-sns.countplot(x='smoke', data=df)
-plt.title('Distribution of Smoking (0 vs 1)')
-plt.show()
-sns.countplot(x='alco', data=df)
-plt.title('Distribution of Alcohol Consumption (0 vs 1)')
-plt.show()
-
-
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(df[['age_years', 'height', 'weight', 'ap_hi', 'ap_lo']])
 scaled_df = pd.DataFrame(scaled_features, columns=['age_years', 'height', 'weight', 'ap_hi', 'ap_lo'], index=df.index)
-
-# Combine scaled features with the other columns
 df_scaled = pd.concat([scaled_df, df[['cholesterol', 'gluc', 'gender', 'smoke', 'alco', 'active', 'cardio']]], axis=1)
 
 print(df_scaled.isnull().sum())
@@ -134,7 +93,7 @@ y_pred = knn.predict(X_test)
 
 # Evaluate the model
 print("Accuracy:", accuracy_score(y_test, y_pred))
-print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Classification Report KNN:\n", classification_report(y_test, y_pred))
 
 # Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
@@ -145,7 +104,7 @@ plt.title('Confusion Matrix')
 plt.show()
 
 # Train Logistic Regression model
-logreg = LogisticRegression(max_iter=1000)
+logreg = LogisticRegression(max_iter=100)
 logreg.fit(X_train, y_train)
 
 # Predict on the test set
@@ -153,7 +112,7 @@ y_pred = logreg.predict(X_test)
 
 # Evaluate the model
 print("Accuracy:", accuracy_score(y_test, y_pred))
-print("Classification Report:\n", classification_report(y_test, y_pred))
+print("Classification Report LR:\n", classification_report(y_test, y_pred))
 
 # Confusion Matrix
 cm = confusion_matrix(y_test, y_pred)
