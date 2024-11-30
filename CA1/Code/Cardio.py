@@ -1,3 +1,4 @@
+#Imports
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -44,6 +45,7 @@ print(df.dtypes)
 pd.set_option('display.max_columns', None)
 print(df.describe(include='all'))
 
+#Visualisations
 # Scatter plot for Height vs. Weight with smaller dots
 plt.figure(figsize=(10, 8))
 
@@ -72,13 +74,14 @@ plt.ylabel('Diastolic blood pressure (mmHg)', fontsize=12)
 # Show plot
 plt.show()
 
+#Scaling using StandardScaler
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(df[['age_years', 'height', 'weight', 'ap_hi', 'ap_lo']])
 scaled_df = pd.DataFrame(scaled_features, columns=['age_years', 'height', 'weight', 'ap_hi', 'ap_lo'], index=df.index)
 df_scaled = pd.concat([scaled_df, df[['cholesterol', 'gluc', 'gender', 'smoke', 'alco', 'active', 'cardio']]], axis=1)
 
-print(df_scaled.isnull().sum())
 
+#Model Implementation
 # Split data into features (X) and target (y)
 X = df_scaled.drop(columns=['cardio'])
 y = df_scaled['cardio']
@@ -110,7 +113,7 @@ logreg.fit(X_train, y_train)
 # Predict on the test set
 y_pred = logreg.predict(X_test)
 
-# Evaluate the model
+# Evalate the model
 print("Accuracy:", accuracy_score(y_test, y_pred))
 print("Classification Report LR:\n", classification_report(y_test, y_pred))
 
